@@ -1,16 +1,9 @@
-## build runner
 FROM node:24.10
 
 WORKDIR /app
 
-# Copy package files first to leverage Docker cache
-COPY package*.json ./
-
-# Install dependencies
-RUN npm install
-
-# Copy the rest of the application
+# Copy package files and install dependencies
 COPY . .
 
-# Start bot
-CMD [ "node", "main.js" ]
+# Start using npm script
+CMD ["npm", "run", "start"]
