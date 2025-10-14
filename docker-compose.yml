@@ -6,5 +6,5 @@ services:
     environment:
       - BOT_TOKEN=${BOT_TOKEN}
       - RCON_IP=${RCON_IP}
-      - RCON_PORT=${25575}
+      - RCON_PORT=${RCON_PORT}
       - RCON_PASS=${RCON_PASS}
