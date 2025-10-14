@@ -5,3 +5,6 @@ services:
     command: node build/main.js
     environment:
       - BOT_TOKEN=${BOT_TOKEN}
+      - RCON_IP=${RCON_IP}
+      - RCON_PORT=${25575}
+      - RCON_PASS=${RCON_PASS}

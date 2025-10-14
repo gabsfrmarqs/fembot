@@ -8,6 +8,27 @@ import {
   SimpleCommandOptionType,
   Slash,
 } from "discordx";
+
+@Discord()
+export class SImpleCommands {
+  @SimpleCommand({ aliases: ["hi"] })
+  async hello(command: SimpleCommandMessage): Promise<void> {
+    const member = command.message.member;
+    if (member) {
+      await command.message.reply(`👋 ${member.toString()}`);
+    } else {
+      await command.message.reply("👋 hello");
+    }
+  }
+
+  @SimpleCommand({ aliases: ["leite"] })
+  async leit(command: SimpleCommandMessage): Promise<void> {
+      await command.message.reply(`mim de papai`);
+
+  }
+}
+
+
 /*
 @Discord()
 export class Example {

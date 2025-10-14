@@ -24,7 +24,7 @@
   },
   "devDependencies": {
     "@types/node": "^22.10.10",
-    "nodemon": "^3.1.9",
+    "nodemon": "^3.1.10",
     "prettier": "^3.4.2",
     "ts-node": "^10.9.2",
     "typescript": "5.7.3"

@@ -7,7 +7,7 @@ import { Discord, MetadataStorage, Slash } from "discordx";
 export class SlashExample {
   // example: pagination for all slash command
   @Slash({
-    description: "Pagination for all slash command",
+    description: "Lista todos os comandos disponíveis com uma descrição",
     name: "all-commands",
   })
   async pages(interaction: CommandInteraction): Promise<void> {
@@ -32,5 +32,18 @@ export class SlashExample {
 
     const pagination = new Pagination(interaction, pages);
     await pagination.send();
+  }
+
+  @Slash({
+    description: "Dados sobre o bot",
+    name: "que",
+  })
+  async que(interaction: CommandInteraction): Promise<void> {
+    const commands = MetadataStorage.instance.applicationCommands.map((cmd) => {
+      return { description: cmd.description, name: cmd.name };
+    });
+
+    await interaction.reply(`buce** bradesco`);
+    return;
   }
 }

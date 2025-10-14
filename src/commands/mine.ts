@@ -12,11 +12,19 @@ async function getServerStatus(url: string){
         method: "GET",
         redirect: "follow" as RequestRedirect
     };
-      
+    let status;
+    try {
     let fetchResponse = await fetch(url, requestOptions);
-    const status = await fetchResponse.json();
-    console.log(status)
-    return status;
+    status = await fetchResponse.json();
+    
+  }
+  catch (error) {
+    console.log("fudeu");
+    status = {error: "error"}
+    
+  }
+  console.log(status);
+  return status;
 }
 
 function base64toPng(base64String: string){
