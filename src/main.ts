@@ -77,12 +77,16 @@ async function run() {
   if (!process.env.BOT_TOKEN) {
     throw Error("Could not find BOT_TOKEN in your environment");
   }
+
+  //Disabling RCON for now.
+  /*
   try{
   await MinecraftRconService.connect();
   console.log('RCON client connected!');
   } catch (error) {
     console.error('Failed to connect to RCON server:', error);
   }
+  */
 
   // Log in with your bot token
   await bot.login(process.env.BOT_TOKEN);
