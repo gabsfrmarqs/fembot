@@ -3,9 +3,7 @@ import { ApplicationCommandOptionType, AttachmentBuilder } from "discord.js";
 import { Discord, Slash, SlashGroup, SlashOption } from "discordx";
 import { EmbedBuilder } from "discord.js";
 import { writeFileSync } from "fs";
-
-
-//let javaData = ""
+import { MinecraftRconService } from "./minecraft-rcon.js";
 
 async function getServerStatus(url: string){
     const requestOptions: RequestInit = {
@@ -44,29 +42,37 @@ export class GroupExample {
   async status(
     interaction: CommandInteraction,
   ): Promise<void> {
+    // Defer the reply immediately to prevent timeout
+    await interaction.deferReply();
 
-  // Java Server data
-  let javaData = await getServerStatus("https://api.mcsrvstat.us/3/minecraft.marquesgabriel.dev");
-  let bedrockData = await getServerStatus("https://api.mcsrvstat.us/bedrock/3/bedrock.marquesgabriel.dev:25565");
-  
-  
-  const unixtime = Math.floor(Date.now() / 1000);
-  let ultimaChecagem = Math.floor(unixtime - javaData.debug.cachetime);
+    // Java Server data
+    let javaData = await getServerStatus("https://api.mcsrvstat.us/3/minecraft.meltylands.boo");
+    let bedrockData = await getServerStatus("https://api.mcsrvstat.us/bedrock/3/bedrock.marquesgabriel.dev:25565");
+    
+    // Check if Java data is valid
+    if (!javaData || javaData.error) {
+      await interaction.editReply("Erro ao obter status do servidor Java.");
+      return;
+    }
 
-  if (javaData.online !== true){
-    await interaction.reply(`Servidor offline! Ultima verificação ocorreu ${ultimaChecagem} segundos atrás.
-        \nAguarde ${300 - ultimaChecagem} segundos para tentar novamente.`);
-    return;
-  }
+    const unixtime = Math.floor(Date.now() / 1000);
+    let ultimaChecagem = Math.floor(unixtime - javaData.debug.cachetime);
 
-  let playersList = [];
-  let playersString = `${javaData.players.online}/${javaData.players.max}`
-  for (const i in javaData.players.list) {
-    playersString += `\n${javaData.players.list[i].name}`;
-  }
-  
-  
-  const iconPath = base64toPng(javaData.icon);
+    if (javaData.online !== true){
+      await interaction.editReply(`Servidor offline! Ultima verificação ocorreu ${ultimaChecagem} segundos atrás.
+          \nAguarde ${300 - ultimaChecagem} segundos para tentar novamente.`);
+      return;
+    }
+
+    let playersList = [];
+    let playersString = `${javaData.players.online}/${javaData.players.max}`
+    if (javaData.players.list) {
+      for (const i in javaData.players.list) {
+        playersString += `\n${javaData.players.list[i].name}`;
+      }
+    }
+    
+    const iconPath = javaData.icon ? base64toPng(javaData.icon) : "./server-icon.png";
   const file = new AttachmentBuilder(iconPath, { name: 'server-icon.png' });
   const attachment = new AttachmentBuilder(iconPath, { name: 'server-icon.png' });
   const embed = new EmbedBuilder();
@@ -75,8 +81,8 @@ export class GroupExample {
   })
   embed.setTitle("**Server Online**")
   embed.addFields({ name: "Hostname", value: javaData.hostname })
-  if (bedrockData.online === true){
-    embed.addFields({ name: "Bedrock Server", value: `bedrock.marquesgabriel.dev` })
+  if (!bedrockData.error && bedrockData.online === true) {
+    embed.addFields({ name: "Bedrock Server", value: `bedrock.meltylands.boo` })
   }
   embed.addFields({
     name: "Description",
@@ -84,7 +90,7 @@ export class GroupExample {
   })
   embed.addFields({ name: "Players Online", value: playersString })
   embed.setThumbnail('attachment://server-icon.png')
-    await interaction.reply({ embeds: [embed], files: [file] });
+    await interaction.editReply({ embeds: [embed], files: [file] });
   }
 
   @Slash({ description: "mapa" })
@@ -92,8 +98,10 @@ export class GroupExample {
   async mapa(
     interaction: CommandInteraction,
   ): Promise<void> {
-    await interaction.reply("Aqui está o link do mapa! \nhttps://dynmap.marquesgabriel.dev");
+    await interaction.deferReply();
+    await interaction.editReply("Aqui está o link do mapa! \nhttps://bluemap.meltylands.boo");
   }
+
 }
 
 
