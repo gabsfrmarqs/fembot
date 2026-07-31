@@ -1,8 +1,9 @@
 version: "3"
 services:
-  app:
-    build: .
-    command: node build/main.js
+  fembot:
+    container_name: fembot
+    restart: unless-stopped
+    image: fembot:latest
     environment:
       - BOT_TOKEN=${BOT_TOKEN}
       - RCON_IP=${RCON_IP}
