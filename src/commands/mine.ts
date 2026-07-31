@@ -63,7 +63,8 @@ export class GroupExample {
       return;
     }
 
-    let playersList = [];
+    //TODO fazer igual a lista de plugins abaixo
+    //Parsing para a lista de jogadores online
     let playersString = `${javaData.players.online}/${javaData.players.max}`;
     if (javaData.players.list) {
       for (const i in javaData.players.list) {
@@ -71,6 +72,9 @@ export class GroupExample {
       }
     }
 
+    //Parsing para a lista de plugins
+    const pluginsString = (javaData.plugins || []).map((p: { name: string }) => p.name).join(', ');
+    
     const iconPath = javaData.icon
       ? base64toPng(javaData.icon)
       : "./server-icon.png";
@@ -82,8 +86,11 @@ export class GroupExample {
     embed.setFooter({
       text: `Ultima verificação ocorreu ${ultimaChecagem} segundos atrás`,
     });
-    embed.setTitle("**Server Online**");
-    embed.addFields({ name: "Hostname", value: javaData.hostname });
+
+    //Embed configuration!!
+    embed.setTitle("**Servidor Online**");
+    embed.addFields({ name: "URL", value: javaData.hostname });
+
     if (!bedrockData.error && bedrockData.online === true) {
       embed.addFields({
         name: "Bedrock Server",
@@ -93,7 +100,7 @@ export class GroupExample {
 
     //motd
     embed.addFields({
-      name: "Description",
+      name: "Descrição",
       value: javaData.motd.clean.join("\n") || "-",
     });
 
@@ -101,11 +108,11 @@ export class GroupExample {
     embed.addFields({ name: "Players Online", value: playersString });
 
     //Minecraft version
-
     if ((javaData.software).search(/Paper/) != -1){
-      embed.addFields({ name: "Version", value: javaData.version + " com plugins"});
+      embed.addFields({ name: "Versão", value: javaData.version + " com plugins"});
+      embed.addFields({ name: "Plugins", value: pluginsString });
     } else{
-        embed.addFields({ name: "Version", value: javaData.version});
+        embed.addFields({ name: "Versão", value: javaData.version});
     }
     
 
